@@ -1,5 +1,12 @@
 # gptcli
 This is a very basic console that wraps a small portion of OpenAI's API
+You need your own OpenAI API key to use this program. You'll also need to set it as an
+environment variable with the following command:
+```
+ $ export OPENAI_API_KEY=<your api key>
+```
+[For more information take a look at the API documentation](https://platform.openai.com/docs/quickstart?context=python)
+
 
 ## Usage
 There are two primary input types, the default chat/prompt input and the menu. When you first

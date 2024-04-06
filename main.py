@@ -1,6 +1,7 @@
 from prompt_toolkit import PromptSession
 # from prompt_toolkit.history import FileHistory
 # from os.path import expanduser
+# MUST HAVE OPENAI_API_KEY envinroment variable set, check README
 from openai import OpenAI
 import os
 import json
