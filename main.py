@@ -19,7 +19,6 @@ MODELS = [
     'gpt-3.5-turbo',
 ]
 
-# model='gpt-4'
 model = MODELS[1]
 messages = [ 
     {
@@ -29,6 +28,7 @@ messages = [
 ]
 
 # Title-inate
+# -----------
 def t_inate(s):
     return s + "\n" + ('-' * len(s))
 
@@ -42,6 +42,7 @@ def get_int(prompt, l, h):
             return n
         except ValueError:
             print(f"Invalid selection, expected integer between {l} and {h}. Try Again.")
+
 
 def print_messages():
     global messages
@@ -152,6 +153,7 @@ def cancel_menu():
 def exit_menu():
     return -1
 
+# Table of function points (to the above functions)
 menu = [
     ("Save chat", save_chat),
     ("Load chat", load_chat),
@@ -165,11 +167,13 @@ menu = [
 
 def handle_menu():
     global menu
+    # Print table options
     print(t_inate("Options:"))
     for i, m in enumerate(menu):
         print(f"    {i+1}. {m[0]}")
 
     choice = get_int(f"Select menu option (1 - {len(menu)}): ", 1, len(menu))
+    # Calling menu function pointers
     status = menu[choice-1][1]()
     if status > 0:
         print("!\n")
@@ -177,24 +181,32 @@ def handle_menu():
 
 
 if __name__ == "__main__":
+    # Print system prompt
     print(f"{t_inate('System prompt:')}\n{messages[0]['content']}\n")
 
     while True:
+        # Main prompt
         user_msg = get_user_message()
         if user_msg == CANCEL_MESSAGE:
             continue
         if not user_msg:
+            # not user_msg means empty
             if handle_menu() == -1:
-                # Exit condition
+                # Exit condition (see exit_menu())
                 break
             continue
     
+        # Add users message to chat history
         messages.append({'role': 'user', 'content': user_msg})
     
+        # Indicate about to hit API
         print("...\n")
         completion = client.chat.completions.create(model=model, messages=messages)
+        # Only 1 choice, only care about message for now
         gpt_resp = completion.choices[0].message
     
+        # Add gpts response to chat history
         messages.append({'role': gpt_resp.role, 'content': gpt_resp.content})
     
+        # Print gpts response
         print(f"\n{t_inate(gpt_resp.role.capitalize() + ':')}\n{gpt_resp.content}\n")
