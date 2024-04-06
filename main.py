@@ -44,7 +44,6 @@ def get_int(prompt, l, h):
         except ValueError:
             print(f"Invalid selection, expected integer between {l} and {h}. Try Again.")
 
-
 def print_messages():
     global messages
     for m in messages:
