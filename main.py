@@ -5,12 +5,15 @@ from prompt_toolkit import PromptSession
 from openai import OpenAI
 import os
 import json
+import datetime
 
 # user_prompt_session = PromptSession(history = FileHistory(expanduser('/.gpt_history')))
 user_prompt_session = PromptSession()
 
 client = OpenAI()
 
+LOGGING = True
+LOG_PATH = './.gptcli.log'
 END_OF_MESSAGE = '@'
 CANCEL_MESSAGE = '#'
 VIEW_MENU = '%'
@@ -48,7 +51,21 @@ def print_messages():
     global messages
     for m in messages:
         print(f"{t_inate(m['role'].capitalize() + ':')}\n{m['content']}\n")
-        
+
+def append_message(message):
+    global LOG_PATH
+    global messages
+    messages.append(message)
+    if not LOGGING:
+        return
+    log_entry = {
+        'timestamp': str(datetime.datetime.now()),
+        'message': message,
+    }
+    with open(LOG_PATH, 'a+', encoding='utf-8') as f:
+        json.dump(log_entry, f, indent=4)
+
+
 def get_user_message(user_name='user'):
     global END_OF_MESSAGE
     global CANCEL_MESSAGE
@@ -73,21 +90,30 @@ def get_user_message(user_name='user'):
 def save_chat():
     global messages
     global CHAT_FILE_EXTENSION
+    # Get chat_name
     while True:
         chat_name = input("Enter chat name (no symbols other than \"_\"): ")
         if chat_name.isidentifier():
             break
         print("Invalid name, try again.")
+
     chat_name += CHAT_FILE_EXTENSION
+
+    # Check if chat already exists (and is being overwritten)
     if os.path.isfile(chat_name):
         print("Warning: This chat already exists, would you like to override it? (y/n)")
         resp = input()
         if not resp:
+            # No response, exit without doing anything
             return 1
         if resp[0] != 'y':
+            # Response not 'y', exit without doing anything
             return 1
+
+    # Write message to chat
     with open(chat_name, 'w', encoding='utf-8') as f:
         json.dump(messages, f, indent=4)
+
     return 0
 
 def load_chat():
@@ -197,7 +223,7 @@ if __name__ == "__main__":
             continue
     
         # Add users message to chat history
-        messages.append({'role': 'user', 'content': user_msg})
+        append_message({'role': 'user', 'content': user_msg})
     
         # Indicate about to hit API
         print("...\n")
@@ -206,7 +232,7 @@ if __name__ == "__main__":
         gpt_resp = completion.choices[0].message
     
         # Add gpts response to chat history
-        messages.append({'role': gpt_resp.role, 'content': gpt_resp.content})
-    
+        append_message({'role': gpt_resp.role, 'content': gpt_resp.content})
+
         # Print gpts response
         print(f"\n{t_inate(gpt_resp.role.capitalize() + ':')}\n{gpt_resp.content}\n")
