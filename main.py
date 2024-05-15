@@ -20,6 +20,8 @@ VIEW_MENU = '%'
 CHAT_FILE_EXTENSION = '.chat'
 MODELS = [
     'gpt-4',
+    'gpt-4o',
+    'gpt-4-turbo',
     'gpt-3.5-turbo',
 ]
 
