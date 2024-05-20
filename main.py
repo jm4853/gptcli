@@ -35,6 +35,7 @@ messages = [
 
 # Title-inate
 # -----------
+# (adds a line of hyphens under text)
 def t_inate(s):
     return s + "\n" + ('-' * len(s))
 
@@ -54,7 +55,7 @@ def print_messages():
     for m in messages:
         print(f"{t_inate(m['role'].capitalize() + ':')}\n{m['content']}\n")
 
-def append_message(message):
+def append_and_log_message(message):
     global LOG_PATH
     global messages
     messages.append(message)
@@ -89,7 +90,7 @@ def get_user_message(user_name='user'):
         line = user_prompt_session.prompt()
     return user_resp
 
-def save_chat():
+def menu_save_chat():
     global messages
     global CHAT_FILE_EXTENSION
     # Get chat_name
@@ -118,7 +119,7 @@ def save_chat():
 
     return 0
 
-def load_chat():
+def menu_load_chat():
     global messages
     global CHAT_FILE_EXTENSION
     chat_table = []
@@ -143,7 +144,7 @@ def load_chat():
     print_messages()
     return 0
 
-def change_model():
+def menu_change_model():
     global model
     global MODELS
     print(t_inate("Available models:"))
@@ -161,10 +162,10 @@ def change_model():
     return 0
 
 
-def change_system_prompt():
+def menu_change_system_prompt():
     global messages
-    # TODO: Figure something out here
     print(t_inate("Current Status Prompt:"))
+    # TODO: Handle failed assertion
     assert messages[0]['role'] == 'system'
     print(messages[0]['content'])
     print("\nEnter the new system prompt (empty to cancel):")
@@ -175,20 +176,21 @@ def change_system_prompt():
     print("Updated system prompt")
     return 0
 
-def cancel_menu():
+
+def menu_cancel():
     return 0
 
-def exit_menu():
+def menu_exit():
     return -1
 
-# Table of function points (to the above functions)
+# Table of function pointers (to the above functions)
 menu = [
-    ("Save chat", save_chat),
-    ("Load chat", load_chat),
-    ("Change model", change_model),
-    ("Change system prompt", change_system_prompt),
-    ("Cancel", cancel_menu),
-    ("Exit", exit_menu),
+    ("Save chat", menu_save_chat),
+    ("Load chat", menu_load_chat),
+    ("Change model", menu_change_model),
+    ("Change system prompt", menu_change_system_prompt),
+    ("Cancel", menu_cancel),
+    ("Exit", menu_exit),
 ]
 
 
@@ -220,12 +222,12 @@ if __name__ == "__main__":
         if not user_msg:
             # not user_msg means empty
             if handle_menu() == -1:
-                # Exit condition (see exit_menu())
+                # Exit condition (see menu_exit())
                 break
             continue
     
         # Add users message to chat history
-        append_message({'role': 'user', 'content': user_msg})
+        append_and_log_message({'role': 'user', 'content': user_msg})
     
         # Indicate about to hit API
         print("...\n")
@@ -234,7 +236,7 @@ if __name__ == "__main__":
         gpt_resp = completion.choices[0].message
     
         # Add gpts response to chat history
-        append_message({'role': gpt_resp.role, 'content': gpt_resp.content})
+        append_and_log_message({'role': gpt_resp.role, 'content': gpt_resp.content})
 
         # Print gpts response
         print(f"\n{t_inate(gpt_resp.role.capitalize() + ':')}\n{gpt_resp.content}\n")
