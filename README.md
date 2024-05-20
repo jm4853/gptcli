@@ -1,7 +1,7 @@
 # gptcli
 This is a very basic console that wraps a small portion of OpenAI's API
 You need your own OpenAI API key to use this program. You'll also need to set it as an
-environment variable with the following command:
+environment variable with the following command (for linux, goodluck if you're using windows):
 ```
  $ export OPENAI_API_KEY=<your api key>
 ```
