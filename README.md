@@ -8,7 +8,7 @@ environment variable with the following command:
 [For more information take a look at the API documentation](https://platform.openai.com/docs/quickstart?context=python)
 
 ## TODO
-- Implement multimodal support for gpt-4o (allow user to attach/receive images)
+- Implement [multimodal support](https://platform.openai.com/docs/guides/vision) for gpt-4o (allow user to attach/receive images)
 
 ## Usage
 There are two primary input types, the default chat/prompt input and the menu. When you first
