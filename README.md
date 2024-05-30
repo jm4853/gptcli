@@ -13,11 +13,11 @@ environment variable with the following command (for linux, goodluck if you're u
 ## Usage
 There are two primary input types, the default chat/prompt input and the menu. When you first
 launch the program, the default system prompt will be printed. From there you can either send
-a message to to openai, or open the menu.
+a message to openai, or open the menu.
 
 ### Sending Messages
-In order to conclude a message, you must enter `END_OF_MESSAGE` (by default `@`) on a line by
-itself. For example:
+In order to conclude a message, you must enter the `END_OF_MESSAGE` character (by default `@`)
+on a line by itself. For example:
 ```
 User:
 -----
@@ -26,7 +26,7 @@ User:
     View Menu  -  "%" or empty message
 Could you please elaborate on the proverb "A foolish man will ignore the mundane actions of a
 canine, however the wise man will ask 'what the dog doin?'"
-%
+@
 ```
 From there `...` will be printed to indicate that the message is being sent, and then the 
 response from openai will be printed. You will then be prompted to send a message or open the
